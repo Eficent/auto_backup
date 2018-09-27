@@ -20,13 +20,6 @@ import base64
 import socket
 
 
-try:
-    import paramiko
-except ImportError:
-    raise ImportError(
-        'This module needs paramiko to automatically write backups to the FTP through SFTP. Please install paramiko on your system. (sudo pip3 install paramiko)')
-
-
 def execute(connector, method, *args):
     res = False
     try:
@@ -99,6 +92,14 @@ class db_backup(models.Model):
 
     @api.multi
     def test_sftp_connection(self, context=None):
+        try:
+            import paramiko
+        except ImportError:
+            raise ImportError(
+                'This module needs paramiko to automatically write backups '
+                'to the FTP through SFTP. Please install paramiko on your '
+                'system. (sudo pip3 install paramiko)')
+
         self.ensure_one()
 
         # Check if there is a success or fail and write messages
@@ -141,6 +142,14 @@ class db_backup(models.Model):
 
     @api.model
     def schedule_backup(self):
+        try:
+            import paramiko
+        except ImportError:
+            raise ImportError(
+                'This module needs paramiko to automatically write '
+                'backups to the FTP through SFTP. Please install '
+                'paramiko on your system. (sudo pip3 install paramiko)')
+
         conf_ids = self.search([])
 
         for rec in conf_ids:
